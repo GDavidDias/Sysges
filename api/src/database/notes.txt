@@ -1,0 +1,330 @@
+CREATE DATABASE dbgesdoc;
+
+USE dbgesdoc;
+
+CREATE TABLE documento(id INT(7) NOT NULL AUTO_INCREMENT, datetime_creacion DATETIME DEFAULT NULL, nota VARCHAR(50) DEFAULT NULL, pertinente INT(7) DEFAULT NULL, asunto VARCHAR(200) DEFAULT NULL, tipodoc INT(2) DEFAULT NULL, origen VARCHAR(250) DEFAULT NULL, fojas VARCHAR(50) DEFAULT NULL,  PRIMARY KEY(id));
+
+CREATE TABLE movimientos(id INT(10) NOT NULL AUTO_INCREMENT, id_documento INT(7) DEFAULT NULL, user_origen INT(7) DEFAULT NULL, user_destino INT(7) DEFAULT NULL, id_area_destino INT(7) DEFAULT NULL, datetime_recibido DATETIME DEFAULT NULL, id_estado INT(7) DEFAULT NULL, observaciones VARCHAR(200) DEFAULT NULL, datetime_movimiento DATETIME DEFAULT NULL, PRIMARY KEY(id));
+
+CREATE TABLE estados(id INT(7) NOT NULL AUTO_INCREMENT, descripcion VARCHAR(50) DEFAULT NULL, PRIMARY KEY(id));
+
+CREATE TABLE usuarios (id INT(7) NOT NULL AUTO_INCREMENT, nombre VARCHAR(50) DEFAULT NULL, username VARCHAR(50) DEFAULT NULL, password VARCHAR(50) DEFAULT NULL, permiso INT(2) DEFAULT NULL, activo INT(1) DEFAULT NULL,PRIMARY KEY(id));
+
+CREATE TABLE usuarioarea (id INT(7) NOT NULL AUTO_INCREMENT, id_usuario INT(7) DEFAULT NULL, id_area INT(7) DEFAULT NULL, PRIMARY KEY(id));
+
+CREATE TABLE area(id INT(7) NOT NULL AUTO_INCREMENT, descripcion VARCHAR(50) DEFAULT NULL, PRIMARY KEY(id));
+
+
+--SE AGREGA CAMPO TIPO DOCUMENTO tipodoc, hardcodeado en nuevo documento
+ALTER TABLE documento ADD tipodoc INT(2) DEFAULT NULL;
+
+--NO SE CREA TABLA SE HARDCODEAN DATOS (POCO TIEMPO)
+CREATE TABLE tipodocumento(id INT(2) NOT NULL AUTO_INCREMENT, descripcion VARCHAR(50) DEFAULT NULL, abreviatura VARCHAR(10) DEFAULT NULL, PRIMARY KEY(id));
+
+-----Se actualiza tabla documento, se agregan dos campos
+ALTER TABLE documento ADD origen VARCHAR(250) DEFAULT NULL;
+ALTER TABLE documento ADD fojas VARCHAR(50) DEFAULT NULL;
+
+--------------
+--PARA ALTA tipodocumento
+INSERT INTO tipodocumento(descripcion, abreviatura) VALUE ('Recurso Jerarquico', 'RJ');
+INSERT INTO tipodocumento(descripcion, abreviatura) VALUE ('Expediente', 'EXP');
+INSERT INTO tipodocumento(descripcion, abreviatura) VALUE ('Solicitudes Varias', 'SOL');
+INSERT INTO tipodocumento(descripcion, abreviatura) VALUE ('Amparo Judicial', 'AMP');
+INSERT INTO tipodocumento(descripcion, abreviatura) VALUE ('Pedidos de Aclaratoria (ART 106 - LPA)', 'PA');
+INSERT INTO tipodocumento(descripcion, abreviatura) VALUE ('Solicitudes de Docentes', 'SD');
+
+
+--PARA ALTA USUARIOS SISTEMA
+INSERT INTO usuarios (nombre, username, password, permiso, activo) VALUE ('guillermo dias', 'admin', '1234',1,1);
+INSERT INTO usuarios (nombre, username, password, permiso, activo) VALUE ('usuario p inicial', 'userini', '123',2,1);
+INSERT INTO usuarios (nombre, username, password, permiso, activo) VALUE ('usuario p primaria', 'userprim', '123',2,1);
+INSERT INTO usuarios (nombre, username, password, permiso, activo) VALUE ('usuario p secund', 'usersec', '123',2,1);
+INSERT INTO usuarios (nombre, username, password, permiso, activo) VALUE ('usuario p tecprof', 'usertp', '123',2,1);
+INSERT INTO usuarios (nombre, username, password, permiso, activo) VALUE ('usuario p superior', 'usersup', '123',2,1);
+INSERT INTO usuarios (nombre, username, password, permiso, activo) VALUE ('usuario mesa entrada', 'userme', '123',2,1);
+INSERT INTO usuarios (nombre, username, password, permiso, activo) VALUE ('usuario consulta', 'consulta', '123',3,1);
+
+-- PARA ALTA DE AREAS
+INSERT INTO area (descripcion) VALUE ('Administrador');
+INSERT INTO area (descripcion) VALUE ('Mesa de Entrada');
+INSERT INTO area (descripcion) VALUE ('Sala Inicial');
+INSERT INTO area (descripcion) VALUE ('Sala Primaria');
+INSERT INTO area (descripcion) VALUE ('Sala Secundaria');
+INSERT INTO area (descripcion) VALUE ('Sala Tecnico Profesional');
+INSERT INTO area (descripcion) VALUE ('Sala Superior');
+INSERT INTO area (descripcion) VALUE (AREA DIGITAL DE PRESIDENCIA);
+
+-- PARA ALTA USUARIOS EN AREAS
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (1,1);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (2,3);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (3,4);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (4,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (5,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (6,7);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (7,2);
+
+
+-- PARA ALTA DE estados
+INSERT INTO estados (descripcion) VALUE ('En Curso');
+INSERT INTO estados (descripcion) VALUE ('Completado');
+INSERT INTO estados (descripcion) VALUE ('Demorado');
+
+-- MODIFICACION TABLA movimientos
+--> se Agrega FECHA_RECIBIDO
+CREATE TABLE movimientos(id INT(10) NOT NULL AUTO_INCREMENT, id_documento INT(7) DEFAULT NULL, user_origen INT(7) DEFAULT NULL, user_destino INT(7) DEFAULT NULL, fecha_recibido DATE DEFAULT NULL, id_estado INT(7) DEFAULT NULL, observaciones VARCHAR(200) DEFAULT NULL, fecha_movimiento DATE DEFAULT NULL, PRIMARY KEY(id));
+
+-- MODIFICACION TABLA documento
+--> se agrega fecha y hora datetime
+CREATE TABLE documento(id INT(7) NOT NULL AUTO_INCREMENT, datetime_creacion DATETIME DEFAULT NULL, nota VARCHAR(50) DEFAULT NULL, pertinente INT(7) DEFAULT NULL, asunto VARCHAR(200) DEFAULT NULL, PRIMARY KEY(id));
+
+CREATE TABLE documento(id INT(7) NOT NULL AUTO_INCREMENT, datetime_creacion DATETIME DEFAULT NULL, nota VARCHAR(50) DEFAULT NULL, pertinente INT(7) DEFAULT NULL, asunto VARCHAR(200) DEFAULT NULL, PRIMARY KEY(id));
+
+-- MODIFICACION TABLA movimientos
+--> se agrega fecha y hora datetime en datetime_movimiento y fecha y hora datetime en datetime_recepcion
+CREATE TABLE movimientos(id INT(10) NOT NULL AUTO_INCREMENT, id_documento INT(7) DEFAULT NULL, user_origen INT(7) DEFAULT NULL, user_destino INT(7) DEFAULT NULL, id_area_destino INT(7) DEFAULT NULL, datetime_recibido DATETIME DEFAULT NULL, id_estado INT(7) DEFAULT NULL, observaciones VARCHAR(200) DEFAULT NULL, datetime_movimiento DATETIME DEFAULT NULL, PRIMARY KEY(id));
+
+CREATE TABLE movimientos(id INT(10) NOT NULL AUTO_INCREMENT, id_documento INT(7) DEFAULT NULL, user_origen INT(7) DEFAULT NULL, user_destino INT(7) DEFAULT NULL, id_area_destino INT(7) DEFAULT NULL, datetime_recibido DATETIME DEFAULT NULL, id_estado INT(7) DEFAULT NULL, observaciones VARCHAR(200) DEFAULT NULL, datetime_movimiento DATETIME DEFAULT NULL, PRIMARY KEY(id));
+
+-- MODIFICACION TABLA movimientos
+-->se agrega columna id_area_destino
+ALTER TABLE movimientos ADD id_area_destino INT(7) DEFAULT NULL;
+----------------------------------------
+UPDATE usuarios SET activo = 1 WHERE activo IS NULL;
+----------------------------------------
+
+--PARA ALTA USUARIOS SISTEMA
+usuarios de Asesoria Legal
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Alejandra Valeria Morales Massa','AMORALESMASSA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Alfredo Bernardo Coca','ABCOCA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Alicia Estela Vazquez','AVAZQUEZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('ALICIA LILIANA TOLEDO','ATOLEDO','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Amalia Llampa','ALLAMPA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('ANA VALERIA LLANES','AVLLANES','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Analia Soledad Burgos','ANSOBURGOS','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Andrea del Valle Sanchez','AVSANCHEZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Andres Sebastian Acosta','ASACOSTA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Anibal Javier Paredes','AJPAREDES','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Antonela Abigail Tarifa','ANTARIFA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Ariel Martin Federico Valdiviezo','AVALDIVIEZO','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Aydee Laura Balderrama','ABALDERRAMA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Aylen Abigail Diaz','ABDIAZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Beatriz del Valle Alancay','BALANCAY','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Benjamin Mamani','BEMAMANI','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Bruno Mateo Hernandez','BHERNANDEZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Christian Franco Di Grazia','CDIGRAZIA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Claudia Marcela Liquitay','CMLIQUITAY','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Claudia Susana Quiñones','CQUINONES','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Cristian Daniel Martinez','CRISTIANMARTINEZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Daniel Alejandro Cainzo','DCAINZO','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Daniel Benito Esteban','BDESTEBAN','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Daniel Fernando Cala','DCALA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Daniel Rene Quispe','DRQUISPE','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Dante Marcelo Quispe','DANQUISPE','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('David Ezequiel Alvarez','DALVAREZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Delia Cristina Moran','DMORAN','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('EDGAR ALEJANDRO MARTINEZ','EMARTINEZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Elga Carina Peñaranda','ECPENARANDA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Elias Juan Salazar','ESALAZAR','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Felisa Silvia Vasquez','FVASQUEZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Fernando Antonio Alarcon','FALARCON','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Gabriel Alejandro Siares','GSIARES','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Gabriela Luciana Burgos Garcia','GBURGOSGARCIA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Gisela Alejandra Vera','GIVERA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Gloria Azucena Nieva','GNIEVA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Guadalupe Elizabeth Vedia','GEVEDIA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('HECTOR DARIO ABAN','DABAN','123',5);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('HECTOR ORLANDO RAMOS','HORAMOS','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Hernan Federico Caruso','HCARUSO','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Irene Justina Saavedra','ISAAVEDRA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('JORGE ANTONIO RODRIGUEZ','JORGERODRIGUEZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Jorge Cesar Ramirez','JCRAMIREZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Jorgelina Mariela Flores','JMAFLORES','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Julio Cesar Maldonado','JCMALDONADO','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Julio Horacio Congin','JCONGIN','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Leonel Walberto Vargas','LWVARGAS','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Lidia Mabel Colqui','LCOLQUI','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Liliana Beatriz Cari','LBCARI','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Lorena Irene Vedia','LVEDIA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Ludmila Elias','LELIAS','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Luis Alberto Rojas','LAROJAS','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Luis Daniel Condori','LCONDORI','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Luis Rene Fuentes','LRFUENTES','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Marcela Susana Barrientos','MBARRIENTOS','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Marcos Antonio Jerez','MAJEREZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Maria Agustina Viñaval','MAVINAVAL','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Maria del Rosario Armella','MRARMELLA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Maria Elena Tejerina','MTEJERINA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('MARIA EMILIA TOLEDO','MARITOLEDO','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Maria Gabriela Menacho','MGMENACHO','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('MARIA GRACIELA BARRIENTOS','MGBARRIENTOS','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Maria Laura Pistan','MLPISTAN','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Maribel del Valle Brandan','MVBRANDAN','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Mariela Sonia Zapana','MSZAPANA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Martin Ezequiel Contreras','MECONTRERAS','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Melina Daniela Cabrera','MDCABRERA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Monica Cecila Cunchila','MCUNCHILA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Nancy Edith Chiliguay','ECHILIGUAY','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Natalia Daniela Bautista','NBAUTISTA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Natalia Susana Arjona','NARJONA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Noemi Maria del Rosario Quipildor','RMQUIPILDOR','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Pablo Gabino Aleman','PALEMAN','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Patricia de los Ángeles Gutierrez','PAGUTIERREZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Patricia Viviana Ovejero','POVEJERO','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Ricardo Enrique Miranda','REMIRANDA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Rita del Valle Ruiz','RVRUIZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Rita Valdez','RLVALDEZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Rodrigo Ezequiel Daza','RDAZA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Rosalia Marisol Zalazar','MRZALAZAR','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Rosana Ivana Gaspar','RIGASPAR','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Santiago Milton Garcia','SMGARCIA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Silvia Analia Ramos','SARAMOS','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('SILVIA ANDREA ZUBELZA','SZUBELZA','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Silvina Gabriela Quispe','SGQUISPE','123',3);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Teresita Noemi Reyes','TNREYES','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Trinidad Eduviges Lopez','TELOPEZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Valeria de los Angeles Muñoz','AMUNOZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Victor Sebastian Ortiz','VSORTIZ','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('ELVA DORA FLORES','EDFLORES','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('FERNANDO APARICIO','FAPARICIO','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Silvia Patricia Quispe','SPQUISPE','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Rodolfo Eliseo Sejas','RSEJAS','123',2);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Usuario Administrador','ADMIN','123',1);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Usuario Mesa Entrada','USERME','123',3);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Usuario para Consultas','INVITADO','123',4);
+
+INSERT INTO usuarios (nombre, username, password, permiso, activo) VALUE('Marta Amarilla','MAMARILLA','123',2,1);
+INSERT INTO usuarios (nombre, username, password, permiso) VALUE('Marta Amarilla','MAMARILLA','123',2);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (101,8);
+
+
+
+--- CARGA DE AREAS
+INSERT INTO area (descripcion) VALUE ('ASESORIA LEGAL');
+INSERT INTO area (descripcion) VALUE ('EQUIPO TECNICO');
+INSERT INTO area (descripcion) VALUE ('PRESIDENCIA');
+INSERT INTO area (descripcion) VALUE ('SALA INICIAL');
+INSERT INTO area (descripcion) VALUE ('SALA PRIMARIA');
+INSERT INTO area (descripcion) VALUE ('SALA SECUNDARIA');
+INSERT INTO area (descripcion) VALUE ('SALA SUPERIOR');
+INSERT INTO area (descripcion) VALUE ('SALA TECNICO PROFESIONAL');
+INSERT INTO area (descripcion) VALUE ('AREA DIGITAL DE PRESIDENCIA');
+
+
+|  1 | ASESORIA LEGAL                |
+|  2 | EQUIPO TECNICO                |
+|  3 | PRESIDENCIA                   |
+|  4 | SALA INICIAL                  |
+|  5 | SALA PRIMARIA                 |
+|  6 | SALA SECUNDARIA               |
+|  7 | SALA SUPERIOR                 |
+|  8 | SALA SALA TECNICO PROFESIONAL |
+
+
+-- PARA ALTA USUARIOS EN AREAS
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (1,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (2,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (3,4);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (4,7);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (5,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (6,7);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (7,7);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (8,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (9,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (10,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (11,4);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (12,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (13,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (14,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (15,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (16,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (17,1);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (18,4);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (19,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (20,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (21,3);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (22,3);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (23,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (24,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (25,2);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (26,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (27,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (28,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (29,7);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (30,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (31,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (32,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (33,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (34,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (35,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (36,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (37,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (38,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (39,3);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (40,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (41,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (42,2);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (43,7);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (44,3);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (45,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (46,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (47,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (48,3);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (49,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (50,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (51,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (52,3);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (53,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (54,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (55,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (56,4);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (57,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (58,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (59,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (60,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (61,7);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (62,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (63,7);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (64,1);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (65,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (66,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (67,4);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (68,2);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (69,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (70,4);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (71,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (72,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (73,4);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (74,4);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (75,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (76,4);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (77,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (78,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (79,1);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (80,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (81,6);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (82,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (83,8);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (84,2);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (85,7);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (86,3);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (87,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (88,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (89,4);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (90,5);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (91,1);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (92,1);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (93,2);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (94,3);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (95,3);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (96,3);
+INSERT INTO usuarioarea(id_usuario, id_area) VALUE (97,3);
+
+PERMISOS Y ROLES DE SISTEMA
+//habilita o No botones, segun permiso del usuario
+
+Permiso: 1 -> Administrador: Acceso a todo y puede crear Nuevos Documentos con ota fecha.
+Permiso: 2 -> usuario normal: No Crea Nuevos Documentos
+Permiso: 3 -> Mesa Entrada
+Permiso: 4 -> Consultas
+Permiso: 5 -> Supervisor 
