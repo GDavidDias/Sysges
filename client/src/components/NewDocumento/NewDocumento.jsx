@@ -135,6 +135,7 @@ const NewDocumento = () => {
         }
     },[userSG])
 
+    //Al iniciar 
     useEffect(()=>{
         //al renderizar componente
         seteaValoresIniciales();
